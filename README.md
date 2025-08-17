@@ -4,10 +4,14 @@ Synthetic Identity Composite Language
 Prompt-Simulated Part System
 Plural Identity Engine
 
-> Deterministic perspective from a media diet, not external “truth.”  
-> Contradictions are a feature. Style emerges. Identity is a graph of parts.
+> *Deterministic perspective from a media diet, not external “truth.”*  
+> *Contradictions are a feature. Style emerges. Identity is a graph of parts.*
 
-This project implements **synthetic identities** as ensembles of **individuated parts** (IFS‑inspired) that react to content streams, accumulate *beliefs* (RDF‑ish assertions with provenance), and speak through a **supervisor** that routes across a **weighted DAG** of parts. Parts sit in a **two‑axis, four‑quadrant** value space; each reaction moves their orientation. Identities subscribe to content (e.g., email/RSS/Twitter/Substack adapters), and their “personality” is the deterministic result of their diet + rules.
+Sic transit Machina implements **synthetic identities** as ensembles of **individuated parts** (IFS‑inspired metaphor, software‑implemented) that react to content streams, accumulate a **Belief Graph** (RDF‑like assertions with provenance), and speak through a **Supervisor** that routes across a **weighted DAG** of parts. Parts sit in a **two‑axis, four‑quadrant** value space; each reaction updates orientation. Identities subscribe to content (email/RSS/Twitter/Substack adapters), and their “personality” is the deterministic result of **diet + rules**. A **coherence dial** controls how much contradiction to *surface* per output (we never delete contradictions).
+
+We support two usage modes with the same engine:
+- **Belief Mode** (research/media/creative): outputs may surface contradictions with lineage.  
+- **Policy Mode** (enterprise/compliance): outputs constrained to a signed **Policy Graph** (policy‑of‑record), while contradictions remain visible in storage/QA.
 
 > **Design stance:**
 > - Narrative bias is the **product**, not a bug. We optimize **perspective fidelity** and **internal cohesion**, not outside fact‑checking.
@@ -25,27 +29,27 @@ This project implements **synthetic identities** as ensembles of **individuated 
 
 ---
 
-## What this repo will contain
+## Repository Layout
 
+```
 /src
-id/schema.clj         ; Datomic schema tx
-id/ingest.clj         ; adapters (email/RSS) -> normalized content
-id/narrative.clj      ; narrative clustering -> axis deltas
-id/react.clj          ; per-part reaction -> deltas + triples
-id/graph.clj          ; dynamic DAG construction & routing
-id/supervisor.clj     ; orchestration + synthesis prompts
-id/recall.clj         ; aligned/discordant belief retrieval
-id/game.clj           ; challenges, pairwise ranking, Elo
-id/ui/                ; ClojureScript UI (quadrants, belief browser)
+  id/schema.clj        ; Datomic schema tx
+  id/ingest.clj        ; adapters (email/RSS) -> normalized content
+  id/narrative.clj     ; narrative clustering -> axis deltas
+  id/react.clj         ; per-part reaction -> deltas + triples
+  id/graph.clj         ; dynamic DAG construction and routing
+  id/supervisor.clj    ; orchestration and synthesis prompts
+  id/recall.clj        ; aligned/discordant belief retrieval
+  id/game.clj          ; challenges, pairwise ranking, Elo
+  id/ui/               ; CLJS UI (quadrants, belief browser)
 /resources
-schema.edn            ; Datomic attrs
-prompts/              ; supervisor + part prompt templates
-seeds/                ; demo content feeds (A/B shared+diverge, C separate)
+  schema.edn           ; Datomic attrs
+  prompts/             ; supervisor and part prompt templates
+  seeds/               ; demo content feeds (A/B shared+diverge, C separate)
 /docs
-README.md
-architecture.md
-
----
+  README.md
+  architecture.md
+```
 
 ## Premise & Theory (short)
 
@@ -59,79 +63,6 @@ architecture.md
 
 ---
 
-## Demo in a nutshell
-
-- Three identities (A, B, C)
-  - **A & B** ingest a shared 30‑item baseline, then each diverges (different source adapters).
-  - **C** ingests a separate stream.
-  - All feeds include **paired contradictions**.
-- UI:
-  - per‑part **quadrant map** over time,
-  - **belief browser** (aligned vs discordant assertions with provenance),
-  - **coherence** dial (0.2 → embrace contradiction, 0.8 → tighten),
-  - **time travel** selector (Datomic `as-of`).
-- Game:
-  - writing/joke challenges with pairwise ranking → Elo per identity.
-
----
-
-## Getting started (dev)
-
-1. **Prereqs**: Clojure CLI, Datomic (Cloud or On‑Prem), Node/Yarn for CLJS UI.
-2. **Run Datomic** and set `DATOMIC_URI` in `.env`.
-3. **Load schema & seeds**:
-   ```bash
-   clj -X:id.schema/load
-   clj -X:id.ingest/seed
-
-	4.	Start backend:
-
-clj -M:run
-
-
-	5.	Start UI:
-
-clj -M:shadow watch app
-
-
-	6.	Open http://localhost:8080.
-
-AI agent note: read architecture.md → use id/schema.clj to infer entity keys; prefer batched transactions per content item; do not upsert raw article bodies into Datomic (store in object storage, keep hash + metadata only).
-
-⸻
-
-Project phases
-	•	P0 — Skeleton: schema, minimal ingestion, two parts, single identity, end‑to‑end reaction → synthesis.
-	•	P1 — Three‑identity demo: A/B shared+diverge feeds, C independent; recursion depth 1; coherence dial; quadrant/time‑travel UI.
-	•	P2 — DAG & games: contextual edges, 2 deliberation rounds max, pairwise ranking, Elo.
-	•	P3 — Adapters: Twitter/Substack/email at scale; safety/TOS gate; caching; ops hardening.
-
-⸻
-
-References (orientation only)
-	•	IFS (Internal Family Systems), narrative quadrant mappings, Datomic (immutable facts, Datalog, time‑travel). We borrow geometry and provenance discipline, not outside truth criteria.
-
-⸻
-
-License
-
-Copyright 2025 Penny and Damed Inc, All rights reserved.# Sic transit Machina
-
-**Synthetic Identity Composite Agents (SICA) DAG**  
-**Synthetic Identity Composite Language**  
-**Prompt‑Simulated Part System (PSPS)**  
-**Plural Identity Engine**
-
-> *Deterministic perspective from a media diet, not external “truth.”*  
-> *Contradictions are a feature. Style emerges. Identity is a graph of parts.*
-
-Sic transit Machina implements **synthetic identities** as ensembles of **individuated parts** (IFS‑inspired metaphor, software‑implemented) that react to content streams, accumulate a **Belief Graph** (RDF‑like assertions with provenance), and speak through a **Supervisor** that routes across a **weighted DAG** of parts. Parts sit in a **two‑axis, four‑quadrant** value space; each reaction updates orientation. Identities subscribe to content (email/RSS/Twitter/Substack adapters), and their “personality” is the deterministic result of **diet + rules**. A **coherence dial** controls how much contradiction to *surface* per output (we never delete contradictions).
-
-We support two usage modes with the same engine:
-- **Belief Mode** (research/media/creative): outputs may surface contradictions with lineage.  
-- **Policy Mode** (enterprise/compliance): outputs constrained to a signed **Policy Graph** (policy‑of‑record), while contradictions remain visible in storage/QA.
-
----
 
 ## System Overview
 
@@ -192,6 +123,76 @@ flowchart LR
   SICA -->|audit logs| VIEW
 ```
 
+## Getting Started (dev)
+
+1. **Prereqs**: Clojure CLI, Datomic (Cloud or On‑Prem), Node/Yarn for CLJS UI.  
+2. **Run Datomic** and set `DATOMIC_URI` in `.env`.  
+3. **Load schema and seeds**:
+   ```bash
+   clj -X:id.schema/load
+   clj -X:id.ingest/seed
+   ```
+4. **Start backend**:
+   ```bash
+   clj -M:run
+   ```
+5. **Start UI**:
+   ```bash
+   clj -M:shadow watch app
+   ```
+6. Open http://localhost:8080
+
+> **Agent note**: read `architecture.md` → use `id/schema.clj` to infer entity keys; batch transactions per content item; do not upsert raw article bodies into Datomic (store in object storage, keep hash + metadata only).
+
+---
+
+## Roadmap
+
+> - P0 — Skeleton: schema, minimal ingestion, two parts, single identity, end‑to‑end reaction → synthesis.
+> - P1 — Three‑identity demo: A/B shared+diverge feeds, C independent; recursion depth 1; coherence dial; quadrant/time‑travel UI.
+> - P2 — DAG & games: contextual edges, 2 deliberation rounds max, pairwise ranking, Elo.
+> - P3 — Adapters: Twitter/Substack/email at scale; safety/TOS gate; caching; ops hardening.
+
+```mermaid
+gantt
+  title Sic transit Machina — Demo Roadmap
+  dateFormat  YYYY-MM-DD
+  axisFormat  %b %d
+
+  section P0 Skeleton
+  Schema and minimal ingest and 2 parts and E2E synth     :done,    p0a, 2025-08-01, 10d
+  Basic UI (quadrant and beliefs)                         :active,  p0b, 2025-08-11, 7d
+
+  section P1 Three-identity demo
+  A and B shared baseline then diverge; C independent     :         p1a, 2025-08-20, 10d
+  Coherence dial and time-travel UI                       :         p1b, 2025-08-20, 10d
+
+  section P2 DAG and Games
+  Contextual edges (2 rounds) and disagreement surfacing  :         p2a, 2025-09-03, 10d
+  Challenges and Elo                                      :         p2b, 2025-09-03, 10d
+
+  section P3 Adapters and Ops
+  Twitter Substack email adapters                          :         p3a, 2025-09-17, 10d
+  Safety TOS gate, caching, observability                  :         p3b, 2025-09-17, 10d
+```
+
+
+---
+
+## Demo
+
+- Three identities (A, B, C)
+  - **A & B** ingest a shared 30‑item baseline, then each diverges (different source adapters).
+  - **C** ingests a separate stream.
+  - All feeds include **paired contradictions**.
+- UI:
+  - per‑part **quadrant map** over time,
+  - **belief browser** (aligned vs discordant assertions with provenance),
+  - **coherence** dial (0.2 → embrace contradiction, 0.8 → tighten),
+  - **time travel** selector (Datomic `as-of`).
+- Game:
+  - writing/joke challenges with pairwise ranking → Elo per identity.
+
 ---
 
 ## Wedge: Interactive Identity Builder (IIB)
@@ -211,6 +212,8 @@ flowchart TD
   T1 -->|iterate| D1
   T1 -->|curate| G1
 ```
+
+---
 
 ### PSPS (Prompt‑Simulated Composite)
 
@@ -278,88 +281,6 @@ flowchart LR
   POL(Policy Graph for enterprise mode) --> NG
 
   ORCH --> OUT(Synthesis and Evidence Bundle)
-```
-
----
-
-## Repository Layout
-
-```
-/src
-  id/schema.clj        ; Datomic schema tx
-  id/ingest.clj        ; adapters (email/RSS) -> normalized content
-  id/narrative.clj     ; narrative clustering -> axis deltas
-  id/react.clj         ; per-part reaction -> deltas + triples
-  id/graph.clj         ; dynamic DAG construction and routing
-  id/supervisor.clj    ; orchestration and synthesis prompts
-  id/recall.clj        ; aligned/discordant belief retrieval
-  id/game.clj          ; challenges, pairwise ranking, Elo
-  id/ui/               ; CLJS UI (quadrants, belief browser)
-/resources
-  schema.edn           ; Datomic attrs
-  prompts/             ; supervisor and part prompt templates
-  seeds/               ; demo content feeds (A/B shared+diverge, C separate)
-/docs
-  README.md
-  architecture.md
-```
-
----
-
-## Demo Goals
-
-- **Three identities** (A, B, C): A and B share a 30‑item baseline then diverge; C is independent. All feeds include paired contradictions.  
-- **UI**: per‑part quadrant map over time, belief browser (aligned vs discordant), **coherence dial**, time travel (Datomic `as‑of`).  
-- **Game**: writing/joke challenges, pairwise ranking, Elo per identity.
-
----
-
-## Getting Started (dev)
-
-1. **Prereqs**: Clojure CLI, Datomic (Cloud or On‑Prem), Node/Yarn for CLJS UI.  
-2. **Run Datomic** and set `DATOMIC_URI` in `.env`.  
-3. **Load schema and seeds**:
-   ```bash
-   clj -X:id.schema/load
-   clj -X:id.ingest/seed
-   ```
-4. **Start backend**:
-   ```bash
-   clj -M:run
-   ```
-5. **Start UI**:
-   ```bash
-   clj -M:shadow watch app
-   ```
-6. Open http://localhost:8080
-
-> **Agent note**: read `architecture.md` → use `id/schema.clj` to infer entity keys; batch transactions per content item; do not upsert raw article bodies into Datomic (store in object storage, keep hash + metadata only).
-
----
-
-## Roadmap
-
-```mermaid
-gantt
-  title Sic transit Machina — Demo Roadmap
-  dateFormat  YYYY-MM-DD
-  axisFormat  %b %d
-
-  section P0 Skeleton
-  Schema and minimal ingest and 2 parts and E2E synth     :done,    p0a, 2025-08-01, 10d
-  Basic UI (quadrant and beliefs)                         :active,  p0b, 2025-08-11, 7d
-
-  section P1 Three-identity demo
-  A and B shared baseline then diverge; C independent     :         p1a, 2025-08-20, 10d
-  Coherence dial and time-travel UI                       :         p1b, 2025-08-20, 10d
-
-  section P2 DAG and Games
-  Contextual edges (2 rounds) and disagreement surfacing  :         p2a, 2025-09-03, 10d
-  Challenges and Elo                                      :         p2b, 2025-09-03, 10d
-
-  section P3 Adapters and Ops
-  Twitter Substack email adapters                          :         p3a, 2025-09-17, 10d
-  Safety TOS gate, caching, observability                  :         p3b, 2025-09-17, 10d
 ```
 
 ---
