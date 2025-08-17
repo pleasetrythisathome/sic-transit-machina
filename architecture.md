@@ -294,7 +294,7 @@ flowchart LR
 Inputs: `part.orientation`, `axis delta projection` from narrative analyzer, `novelty(part, content)`, `recency(content)`, `external-exploration-rate`.
 Output: `interest ∈ [0,1]`.
 
-```
+```text
 interest = 0.55*dot(v_hat, Delta_hat) + 0.25*novelty + 0.15*recency + 0.05*epsilon
 activate if interest >= tau (default tau=0.25)
 ```
@@ -400,7 +400,7 @@ sequenceDiagram
 
 ---
 
-## 4) Interaction paradigms
+## 7) Interaction paradigms
 
 1. **Subscribe & evolve**  
    Identities ingest streams; parts react; orientations drift; assertions accrue; contradictions persist.
@@ -413,7 +413,7 @@ sequenceDiagram
 
 ---
 
-## 5) Technology choices
+## 8) Technology choices
 
 - **Language**: Clojure (backend/orchestration), ClojureScript (UI).
 - **Storage**: Datomic (Cloud or On‑Prem). Immutable facts, time‑travel, Datalog recursion.  
@@ -423,7 +423,7 @@ sequenceDiagram
 
 ---
 
-## 6) Project phases & deliverables
+## 9) Project phases & deliverables
 
 ### Phase 0 — Skeleton (1–2 parts, 1 identity)
 - Schema tx; minimal narrative analyzer (rule‑based).
@@ -445,9 +445,9 @@ sequenceDiagram
 
 ---
 
-## 7) API surfaces (for agents and services)
+## 10) API surfaces (for agents and services)
 
-### 7.1 Ingestion (idempotent EDN shape)
+### 10.1 Ingestion (idempotent EDN shape)
 
 ```edn
 {:op :ingest/content
@@ -458,7 +458,7 @@ sequenceDiagram
  :content/narr-clusters [:entrepreneurship :preservation]}
 ```
 
-### 7.2 Reaction
+### 10.2 Reaction
 
 ```edn
 {:op :react
@@ -473,7 +473,7 @@ sequenceDiagram
              :source "https://…" :cluster :entrepreneurship}]}}
 ```
 
-### 7.3 Synthesis
+### 10.3 Synthesis
 
 ```edn
 {:op :synthesize
@@ -486,7 +486,7 @@ sequenceDiagram
 
 ---
 
-## 8) Query patterns (Datalog)
+## 11) Query patterns (Datalog)
 
 Aligned and discordant objects for a (s,p) per part:
 
@@ -511,7 +511,7 @@ Time‑travel:
 
 ---
 
-## 9) Concerns and mitigations
+## 12) Concerns and mitigations
 
 - **Write throughput** (single transaction stream): batch per content item; queue; keep tx sizes moderate.  
 - **Index/storage growth**: deduplicate **Claims**; `:db/noHistory` on churn; avoid indexing large text.  
@@ -522,7 +522,7 @@ Time‑travel:
 
 ---
 
-## 10) Testing and evaluation
+## 13) Testing and evaluation
 
 - **Perspective fidelity**: cosine similarity between output’s implied axis vector and identity/part orientations.  
 - **Cohesion**: fraction of claims in output that exist as current assertions with sufficient weight.  
@@ -532,7 +532,7 @@ Time‑travel:
 
 ---
 
-## 11) Open questions
+## 14) Open questions
 
 - Dynamic vs static DAG topology beyond two rounds.  
 - Multi‑modal ingestion (audio/video) normalization into clusters.  
@@ -542,7 +542,7 @@ Time‑travel:
 ---
 
 
-## 12) Minimal prompts (scaffolds)
+## 15) Minimal prompts (scaffolds)
 
 Supervisor (coherence‑aware)
 ```
@@ -574,7 +574,7 @@ Do not delete previous beliefs. You may add contradictory ones.
 
 ---
 
-## 13) Demo plan (A/B shared+diverge, C independent)
+## 16) Demo plan (A/B shared+diverge, C independent)
 - Seed 30 items common to A + B, then feed A with streams {A1, A2}, B with {B1, B2}, C with {C*}. Insert paired contradictory articles in all.
 - Show:
 - Part quadrant trajectories (A vs B diverge; C distinct).
@@ -584,7 +584,7 @@ Do not delete previous beliefs. You may add contradictory ones.
 
 ---
 
-## 14) Implementation tips (for agents)
+## 17) Implementation tips (for agents)
 - Transact one content item per identity as a single transaction (content meta + reactions + assertions + orientation updates).
 - Always upsert Claim by :claim/hash; never duplicate.
 - Store raw bodies in object storage; Datomic holds hashes/links.
